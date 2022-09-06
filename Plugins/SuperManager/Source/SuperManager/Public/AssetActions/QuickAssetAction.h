@@ -13,7 +13,7 @@ UCLASS()
 class SUPERMANAGER_API UQuickAssetAction : public UAssetActionUtility
 {
 	GENERATED_BODY()
-
+	
 public:
 	UFUNCTION(CallInEditor)
 	void DuplicateAssets(int32 NumOfDuplicates);

@@ -6,11 +6,12 @@
 #include "EditorUtilityLibrary.h"
 #include "EditorAssetLibrary.h"
 
+
 void UQuickAssetAction::DuplicateAssets(int32 NumOfDuplicates)
 {
 	if(NumOfDuplicates<=0)
 	{
-		Print(TEXT("Please enter a VALID number"),FColor::Red);
+		ShowMsgDialog(EAppMsgType::Ok,TEXT("Please enter a VALID number"));
 		return;
 	}
 
@@ -34,7 +35,8 @@ void UQuickAssetAction::DuplicateAssets(int32 NumOfDuplicates)
 	}
 
 	if(Counter>0)
-	{
-		Print(TEXT("Successfully duplicated " + FString::FromInt(Counter) + " files"),FColor::Green);
+	{	
+		ShowNotifyInfo(TEXT("Successfully duplicated " + FString::FromInt(Counter) + " files"));
+		/*Print(TEXT("Successfully duplicated " + FString::FromInt(Counter) + " files"),FColor::Green);*/
 	}
 }
