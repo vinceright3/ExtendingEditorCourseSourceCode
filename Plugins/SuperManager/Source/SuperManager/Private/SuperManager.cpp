@@ -47,7 +47,7 @@ TSharedRef<FExtender> FSuperManagerModule::CustomCBMenuExtender(const TArray<FSt
 		EExtensionHook::After, //Insert before or after
 		TSharedPtr<FUICommandList>(), //Custom hot keys 
 		FMenuExtensionDelegate::CreateRaw(this,&FSuperManagerModule::AddCBMenuEntry)); //Second binding, will define details for this menu entry
-
+		  
 		FolderPathsSelected = SelectedPaths;
 	}
 
@@ -63,6 +63,14 @@ void FSuperManagerModule::AddCBMenuEntry(FMenuBuilder & MenuBuilder)
 		FText::FromString(TEXT("Safely delete all unused assets under folder")), //Tooltip text
 		FSlateIcon(),	//Custom icon
 		FExecuteAction::CreateRaw(this,&FSuperManagerModule::OnDeleteUnsuedAssetButtonClicked) //The actual function to excute
+	);
+
+	MenuBuilder.AddMenuEntry
+	(
+		FText::FromString(TEXT("Delete Empty Folders")), //Title text for menu entry
+		FText::FromString(TEXT("Safely delete all empty folders")), //Tooltip text
+		FSlateIcon(),	//Custom icon
+		FExecuteAction::CreateRaw(this,&FSuperManagerModule::OnDeleteEmptyFoldersButtonClicked) //The actual function to excute
 	);
 }
 
@@ -124,6 +132,11 @@ void FSuperManagerModule::OnDeleteUnsuedAssetButtonClicked()
 	{
 		DebugHeader::ShowMsgDialog(EAppMsgType::Ok,TEXT("No unused asset found under selected folder"),false);
 	}
+}
+
+void FSuperManagerModule::OnDeleteEmptyFoldersButtonClicked()
+{
+	DebugHeader::Print(TEXT("Working"),FColor::Green);
 }
 
 void FSuperManagerModule::FixUpRedirectors()
