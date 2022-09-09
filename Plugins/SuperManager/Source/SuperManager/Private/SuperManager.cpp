@@ -22,6 +22,7 @@ void FSuperManagerModule::InitCBMenuExtention()
 	FContentBrowserModule& ContentBrowserModule =
 	FModuleManager::LoadModuleChecked<FContentBrowserModule>(TEXT("ContentBrowser"));
 
+	//Get hold of all the menu extenders
 	TArray<FContentBrowserMenuExtender_SelectedPaths>& ContentBrowserModuleMenuExtenders =
 	ContentBrowserModule.GetAllPathViewContextMenuExtenders();
 
@@ -30,20 +31,22 @@ void FSuperManagerModule::InitCBMenuExtention()
 
 	ContentBrowserModuleMenuExtenders.Add(CustomCBMenuDelegate);*/
 
+	//We add custom delete to all the existing delegate
 	ContentBrowserModuleMenuExtenders.Add(FContentBrowserMenuExtender_SelectedPaths::
 	CreateRaw(this,&FSuperManagerModule::CustomCBMenuExtender));
 }
 
+//To define the positio for inserting menu entry
 TSharedRef<FExtender> FSuperManagerModule::CustomCBMenuExtender(const TArray<FString>& SelectedPaths)
 {	
 	TSharedRef<FExtender> MenuExtender (new FExtender());
 
 	if(SelectedPaths.Num()>0)
 	{
-		MenuExtender->AddMenuExtension(FName("Delete"),
-		EExtensionHook::After,
-		TSharedPtr<FUICommandList>(),
-		FMenuExtensionDelegate::CreateRaw(this,&FSuperManagerModule::AddCBMenuEntry));
+		MenuExtender->AddMenuExtension(FName("Delete"), //Extend hook, position to insert
+		EExtensionHook::After, //Insert before or after
+		TSharedPtr<FUICommandList>(), //Custom hot keys 
+		FMenuExtensionDelegate::CreateRaw(this,&FSuperManagerModule::AddCBMenuEntry)); //Second binding, will define details for this menu entry
 
 		FolderPathsSelected = SelectedPaths;
 	}
@@ -51,14 +54,15 @@ TSharedRef<FExtender> FSuperManagerModule::CustomCBMenuExtender(const TArray<FSt
 	return MenuExtender;
 }
 
+//Define details for the custom menu entry
 void FSuperManagerModule::AddCBMenuEntry(FMenuBuilder & MenuBuilder)
 {
 	MenuBuilder.AddMenuEntry
 	(
-		FText::FromString(TEXT("Delete Unused Assets")),
-		FText::FromString(TEXT("Safely delete all unused assets under folder")),
-		FSlateIcon(),
-		FExecuteAction::CreateRaw(this,&FSuperManagerModule::OnDeleteUnsuedAssetButtonClicked)
+		FText::FromString(TEXT("Delete Unused Assets")), //Title text for menu entry
+		FText::FromString(TEXT("Safely delete all unused assets under folder")), //Tooltip text
+		FSlateIcon(),	//Custom icon
+		FExecuteAction::CreateRaw(this,&FSuperManagerModule::OnDeleteUnsuedAssetButtonClicked) //The actual function to excute
 	);
 }
 
@@ -72,14 +76,16 @@ void FSuperManagerModule::OnDeleteUnsuedAssetButtonClicked()
 
 	TArray<FString> AssetsPathNames = UEditorAssetLibrary::ListAssets(FolderPathsSelected[0]);
 
+	//Whether there are assets under selected folder
 	if(AssetsPathNames.Num()==0)
 	{
-		DebugHeader::ShowMsgDialog(EAppMsgType::Ok,TEXT("No asset found under selected folder"));
+		DebugHeader::ShowMsgDialog(EAppMsgType::Ok,TEXT("No asset found under selected folder"),false);
 		return;
 	}
 
 	EAppReturnType::Type ConfirmResult =
-	DebugHeader::ShowMsgDialog(EAppMsgType::YesNo,TEXT("A total of ") + FString::FromInt(AssetsPathNames.Num()) + TEXT(" found.\nWoudle you like to procceed?"));
+	DebugHeader::ShowMsgDialog(EAppMsgType::YesNo,TEXT("A total of ") + FString::FromInt(AssetsPathNames.Num()) 
+	+ TEXT(" assets need to be checked.\nWould you like to procceed?"),false);
 
 	if(ConfirmResult == EAppReturnType::No) return;
 	
@@ -91,7 +97,9 @@ void FSuperManagerModule::OnDeleteUnsuedAssetButtonClicked()
 	{
 		//Don't touch root folder
 		if(AssetPathName.Contains(TEXT("Developers"))||
-		AssetPathName.Contains(TEXT("Collections")))
+		AssetPathName.Contains(TEXT("Collections")) ||
+		AssetPathName.Contains(TEXT("__ExternalActors__")) ||
+		AssetPathName.Contains(TEXT("__ExternalObjects__")))
 		{
 			continue;
 		}
@@ -114,7 +122,7 @@ void FSuperManagerModule::OnDeleteUnsuedAssetButtonClicked()
 	}
 	else
 	{
-		DebugHeader::ShowMsgDialog(EAppMsgType::Ok,TEXT("No unused asset found under selected folder"));
+		DebugHeader::ShowMsgDialog(EAppMsgType::Ok,TEXT("No unused asset found under selected folder"),false);
 	}
 }
 
