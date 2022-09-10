@@ -184,7 +184,7 @@ void FSuperManagerModule::OnDeleteEmptyFoldersButtonClicked()
 
 	if(Counter>0)
 	{
-		DebugHeader::ShowNotifyInfo(TEXT("Successfully deleted ") + FString::FromInt(Counter) + TEXT("folders"));
+		DebugHeader::ShowNotifyInfo(TEXT("Successfully deleted ") + FString::FromInt(Counter) + TEXT(" folders"));
 	}
 
 }
