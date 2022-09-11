@@ -244,7 +244,7 @@ void FSuperManagerModule::RegisterAdvanceDeletionTab()
 	.SetDisplayName(FText::FromString(TEXT("Advance Deletion")));
 }
 
-TSharedRef<SDockTab> FSuperManagerModule::OnSpawnAdvanceDeltionTab(const FSpawnTabArgs &)
+TSharedRef<SDockTab> FSuperManagerModule::OnSpawnAdvanceDeltionTab(const FSpawnTabArgs &SpawnTabArgs)
 {	
 	return
 	SNew(SDockTab).TabRole(ETabRole::NomadTab);

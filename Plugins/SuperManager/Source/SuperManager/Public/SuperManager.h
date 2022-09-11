@@ -37,7 +37,7 @@ private:
 	
 	void RegisterAdvanceDeletionTab();
 
-	TSharedRef<SDockTab> OnSpawnAdvanceDeltionTab(const FSpawnTabArgs&);
+	TSharedRef<SDockTab> OnSpawnAdvanceDeltionTab(const FSpawnTabArgs& SpawnTabArgs);
 
 #pragma endregion
 };
