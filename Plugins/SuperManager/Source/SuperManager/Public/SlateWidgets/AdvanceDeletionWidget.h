@@ -14,4 +14,5 @@ class SAdvanceDeletionTab : public SCompoundWidget
 
 public:
 	void Construct(const FArguments& InArgs);
+
 };
