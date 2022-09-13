@@ -64,8 +64,15 @@ TSharedRef<ITableRow> SAdvanceDeletionTab::OnGenerateRowForList(TSharedPtr<FAsse
 {	
 	if(!AssetDataToDisplay.IsValid()) return SNew(STableRow < TSharedPtr <FAssetData> >,OwnerTable);
 
+	const FString DisplayAssetClassName = AssetDataToDisplay->AssetClass.ToString();
 	const FString DisplayAssetName = AssetDataToDisplay->AssetName.ToString();
 	
+	FSlateFontInfo AssetClassNameFont = GetEmboseedTextFont();
+	AssetClassNameFont.Size = 10;
+
+	FSlateFontInfo AssetNameFont = GetEmboseedTextFont();
+	AssetNameFont.Size = 15;
+
 	TSharedRef< STableRow < TSharedPtr <FAssetData> > > ListViewRowWidget =
 	SNew(STableRow < TSharedPtr <FAssetData> >,OwnerTable)
 	[	
@@ -81,12 +88,17 @@ TSharedRef<ITableRow> SAdvanceDeletionTab::OnGenerateRowForList(TSharedPtr<FAsse
 		]
 				
 		//Second slot for displaying asset class name
-
+		+SHorizontalBox::Slot()
+		.HAlign(HAlign_Center)
+		.VAlign(VAlign_Fill)
+		.FillWidth(.2f)
+		[
+			ConstructTextForRowWidget(DisplayAssetClassName,AssetClassNameFont)
+		]
 		//Third slot for displaying asset name
 		+SHorizontalBox::Slot()
 		[
-			SNew(STextBlock)
-			.Text(FText::FromString(DisplayAssetName))
+			ConstructTextForRowWidget(DisplayAssetName,AssetNameFont)
 		]
 		
 		//Fourth slot for a button
@@ -130,4 +142,15 @@ void SAdvanceDeletionTab::OnCheckBoxStateChanged(ECheckBoxState NewState, TShare
 		break;
 	}
 	
+}
+
+TSharedRef<STextBlock> SAdvanceDeletionTab::ConstructTextForRowWidget(const FString & TextContent, 
+const FSlateFontInfo & FontToUse)
+{	
+	TSharedRef<STextBlock> ConstructedTextBlock = SNew(STextBlock)
+	.Text(FText::FromString(TextContent))
+	.Font(FontToUse)
+	.ColorAndOpacity(FColor::White);
+
+	return ConstructedTextBlock;
 }
