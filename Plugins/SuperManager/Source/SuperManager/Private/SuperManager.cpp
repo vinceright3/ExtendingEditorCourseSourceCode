@@ -299,6 +299,16 @@ bool FSuperManagerModule::DeleteSingleAssetForAssetList(const FAssetData & Asset
 	return false;
 }
 
+bool FSuperManagerModule::DeleteMultipleAssetsForAssetList(const TArray<FAssetData>& AssetsToDelete)
+{
+	if(ObjectTools::DeleteAssets(AssetsToDelete)>0)
+	{
+		return true;
+	}
+
+	return false;
+}
+
 #pragma endregion
 
 void FSuperManagerModule::ShutdownModule()

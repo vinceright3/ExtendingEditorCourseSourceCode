@@ -93,7 +93,9 @@ TSharedRef<SListView<TSharedPtr<FAssetData>>> SAdvanceDeletionTab::ConstructAsse
 }
 
 void SAdvanceDeletionTab::RefreshAssetListView()
-{
+{	
+	AssetsDataToDeleteArray.Empty();
+
 	if(ConstructedAssetListView.IsValid())
 	{
 		ConstructedAssetListView->RebuildList();
@@ -175,13 +177,16 @@ void SAdvanceDeletionTab::OnCheckBoxStateChanged(ECheckBoxState NewState, TShare
 	{
 	case ECheckBoxState::Unchecked:
 
-		DebugHeader::Print(AssetData->AssetName.ToString() + TEXT(" is unchecked"), FColor::Red);
+		if(AssetsDataToDeleteArray.Contains(AssetData))
+		{
+			AssetsDataToDeleteArray.Remove(AssetData);
+		}
 
 		break;
 
 	case ECheckBoxState::Checked:
 
-		DebugHeader::Print(AssetData->AssetName.ToString() + TEXT(" is checked"), FColor::Green);
+		AssetsDataToDeleteArray.AddUnique(AssetData);
 
 		break;
 
@@ -238,6 +243,8 @@ FReply SAdvanceDeletionTab::OnDeleteButtonClicked(TSharedPtr<FAssetData> Clicked
 
 #pragma endregion
 
+#pragma region TabButtons
+
 TSharedRef<SButton> SAdvanceDeletionTab::ConstructDeleteAllButton()
 {
 	TSharedRef<SButton> DeleteAllButton = SNew(SButton)
@@ -251,7 +258,38 @@ TSharedRef<SButton> SAdvanceDeletionTab::ConstructDeleteAllButton()
 
 FReply SAdvanceDeletionTab::OnDeleteAllButtonClicked()
 {	
-	DebugHeader::Print(TEXT("Delete All Button Clicked"),FColor::Cyan);
+	if(AssetsDataToDeleteArray.Num()==0)
+	{
+		DebugHeader::ShowMsgDialog(EAppMsgType::Ok,TEXT("No asset currently selected"));
+		return FReply::Handled();
+	}
+
+	TArray<FAssetData> AssetDataToDelete;
+
+	for(const TSharedPtr<FAssetData>& Data:AssetsDataToDeleteArray)
+	{
+		AssetDataToDelete.Add(*Data.Get());
+	}
+
+	 FSuperManagerModule& SuperManagerModule = 
+	 FModuleManager::LoadModuleChecked<FSuperManagerModule>(TEXT("SuperManager"));
+
+	 const bool bAssetsDeleted = SuperManagerModule.DeleteMultipleAssetsForAssetList(AssetDataToDelete);
+
+	 if(bAssetsDeleted)
+	 {
+		for(const TSharedPtr<FAssetData>& DeletedData:AssetsDataToDeleteArray)
+		{
+			if(StoredAssetsData.Contains(DeletedData))
+			{
+				StoredAssetsData.Remove(DeletedData);
+			}
+		}
+
+		RefreshAssetListView();
+	 }
+
+	//Pass data to our module for deletion
 	return FReply::Handled();
 }
 
@@ -302,3 +340,4 @@ TSharedRef<STextBlock> SAdvanceDeletionTab::ConstructTextForTabButtons(const FSt
 	return ConstructedTextBlock;
 }
 
+#pragma endregion
