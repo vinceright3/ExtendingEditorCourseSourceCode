@@ -158,6 +158,8 @@ ESelectInfo::Type InSelectInfo)
 	if(*SelectedOption.Get() == ListAll)
 	{
 		//List all stored asset data
+		DisplayedAssetsData = StoredAssetsData;
+		RefreshAssetListView();
 	}
 	else if(*SelectedOption.Get() == ListUnused)
 	{
@@ -165,9 +167,6 @@ ESelectInfo::Type InSelectInfo)
 		SuperManagerModule.ListUnusedAssetsForAssetList(StoredAssetsData,DisplayedAssetsData);
 		RefreshAssetListView();
 	}
-
-	
-
 }
 
 #pragma endregion
@@ -351,10 +350,16 @@ FReply SAdvanceDeletionTab::OnDeleteAllButtonClicked()
 	 if(bAssetsDeleted)
 	 {
 		for(const TSharedPtr<FAssetData>& DeletedData:AssetsDataToDeleteArray)
-		{
+		{	
+			//Updating the stored assets data
 			if(StoredAssetsData.Contains(DeletedData))
 			{
 				StoredAssetsData.Remove(DeletedData);
+			}
+
+			if(DisplayedAssetsData.Contains(DeletedData))
+			{
+				DisplayedAssetsData.Remove(DeletedData);
 			}
 		}
 
