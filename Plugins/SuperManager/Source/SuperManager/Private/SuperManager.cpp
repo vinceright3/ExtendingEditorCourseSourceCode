@@ -358,6 +358,13 @@ TArray<TSharedPtr<FAssetData>>& OutSameNameAssetsData)
 	}
 }
 
+void FSuperManagerModule::SyncCBToClickedAssetForAssetList(const FString & AssetPathToSync)
+{
+	TArray<FString> AssetsPathToSync;
+	AssetsPathToSync.Add(AssetPathToSync);
+
+	UEditorAssetLibrary::SyncBrowserToObjects(AssetsPathToSync);
+}
 #pragma endregion
 
 void FSuperManagerModule::ShutdownModule()
