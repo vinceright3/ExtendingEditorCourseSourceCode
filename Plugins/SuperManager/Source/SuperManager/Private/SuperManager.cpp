@@ -34,7 +34,7 @@ void FSuperManagerModule::InitCBMenuExtention()
 
 	ContentBrowserModuleMenuExtenders.Add(CustomCBMenuDelegate);*/
 
-	//We add custom delete to all the existing delegate
+	//We add custom delegate to all the existing delegate
 	ContentBrowserModuleMenuExtenders.Add(FContentBrowserMenuExtender_SelectedPaths::
 	CreateRaw(this,&FSuperManagerModule::CustomCBMenuExtender));
 }
