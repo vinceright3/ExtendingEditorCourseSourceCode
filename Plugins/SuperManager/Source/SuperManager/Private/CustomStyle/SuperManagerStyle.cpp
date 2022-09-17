@@ -32,9 +32,20 @@ TSharedRef<FSlateStyleSet> FSuperManagerStyle::CreateSlateStyleSet()
 	CustomStyleSet->Set("ContentBrowser.DeleteUnusedAssets",
 	new FSlateImageBrush(IconDirectory/"DeleteUnusedAsset.png",Icon16x16));
 
+	CustomStyleSet->Set("ContentBrowser.DeleteEmptyFolders",
+	new FSlateImageBrush(IconDirectory/"DeleteEmptyFolders.png",Icon16x16));
+
+	CustomStyleSet->Set("ContentBrowser.AdvanceDeletion",
+	new FSlateImageBrush(IconDirectory/"AdvanceDeletion.png",Icon16x16));
+
 	return CustomStyleSet;
 }
 
 void FSuperManagerStyle::ShutDown()
 {
+	if(CreatedSlateStyleSet.IsValid())
+	{
+		FSlateStyleRegistry::UnRegisterSlateStyle(*CreatedSlateStyleSet);
+		CreatedSlateStyleSet.Reset();
+	}
 }
