@@ -26,7 +26,7 @@ public class SuperManager : ModuleRules
 			new string[]
 			{
 				"Core","Blutility","EditorScriptingUtilities","UMG","Niagara","UnrealEd","AssetTools",
-				"ContentBrowser","InputCore"
+				"ContentBrowser","InputCore","Projects"
 				// ... add other public dependencies that you statically link with here ...
 			}
 			);
