@@ -29,5 +29,12 @@ public:
 
 #pragma endregion
 
+private:
+
+#pragma region QuickMaterialCreation
+
+	bool ProcessSelectedData(const TArray<FAssetData>& SelectedDataToProccess, TArray<UTexture2D*>& OutSelectedTexturesArray,FString& OutSelectedTexturePackagePath);
+
+#pragma endregion
 
 };
