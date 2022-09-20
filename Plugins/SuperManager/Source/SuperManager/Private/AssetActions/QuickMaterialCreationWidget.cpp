@@ -44,6 +44,12 @@ void UQuickMaterialCreationWidget::CreateMaterialFromSelectedTextures()
 
 		Default_CreateMaterialNodes(CreatedMaterial,SelectedTexture,PinsConnectedCounter);
 	}
+
+	if(PinsConnectedCounter>0)
+	{
+		DebugHeader::ShowNotifyInfo(TEXT("Successfully connected ") 
+		+ FString::FromInt(PinsConnectedCounter) + (TEXT(" pins")));
+	}
 	
 }
 
@@ -146,13 +152,23 @@ UTexture2D * SelectedTexture, uint32 & PinsConnectedCounter)
 			return;
 		}
 	}
+
+	if(!CreatedMaterial->Metallic.IsConnected())
+	{
+		if(TryConnectMetalic(TextureSampleNode, SelectedTexture, CreatedMaterial))
+		{
+			PinsConnectedCounter++;
+			return;
+		}
+	}
 }
 
 #pragma endregion
 
-#pragma region CreateMaterialNodes
+#pragma region CreateMaterialNodesConnectPins
 
-bool UQuickMaterialCreationWidget::TryConnectBaseColor(UMaterialExpressionTextureSample * TextureSampleNode, UTexture2D * SelectedTexture, UMaterial * CreatedMaterial)
+bool UQuickMaterialCreationWidget::TryConnectBaseColor(UMaterialExpressionTextureSample * TextureSampleNode, 
+UTexture2D * SelectedTexture, UMaterial * CreatedMaterial)
 {
 	for(const FString& BaseColorName:BaseColorArray)
 	{
@@ -164,13 +180,41 @@ bool UQuickMaterialCreationWidget::TryConnectBaseColor(UMaterialExpressionTextur
 			CreatedMaterial->Expressions.Add(TextureSampleNode);
 			CreatedMaterial->BaseColor.Expression = TextureSampleNode;
 			CreatedMaterial->PostEditChange();
-
+			 
 			TextureSampleNode->MaterialExpressionEditorX -=600;
 
 			return true;
 		}
 	}
 
+	return false;
+}
+
+bool UQuickMaterialCreationWidget::TryConnectMetalic(UMaterialExpressionTextureSample * TextureSampleNode, 
+UTexture2D * SelectedTexture, UMaterial * CreatedMaterial)
+{
+	for(const FString& MetalicName:MetallicArray)
+	{
+		if(SelectedTexture->GetName().Contains(MetalicName))
+		{
+			SelectedTexture->CompressionSettings = TextureCompressionSettings::TC_Default;
+			SelectedTexture->SRGB = false;
+			SelectedTexture->PostEditChange();
+
+			TextureSampleNode->Texture = SelectedTexture;
+			TextureSampleNode->SamplerType = EMaterialSamplerType::SAMPLERTYPE_LinearColor;
+
+			CreatedMaterial->Expressions.Add(TextureSampleNode);
+			CreatedMaterial->Metallic.Expression = TextureSampleNode;
+			CreatedMaterial->PostEditChange();
+
+			TextureSampleNode->MaterialExpressionEditorX -=600;
+			TextureSampleNode->MaterialExpressionEditorY +=240;
+
+			return true;
+		}
+	}
+	
 	return false;
 }
 
