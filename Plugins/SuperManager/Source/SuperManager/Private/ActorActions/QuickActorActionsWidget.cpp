@@ -51,6 +51,74 @@ void UQuickActorActionsWidget::SelectAllActorsWithSimilarName()
 	}
 }
 
+void UQuickActorActionsWidget::DuplicateActors()
+{
+	if(!GetEditorActorSubsystem()) return;
+
+	TArray<AActor*> SelectedActors = EditorActorSubsystem->GetSelectedLevelActors();
+	uint32 Counter = 0;
+
+	if(SelectedActors.Num()==0)
+	{
+		DebugHeader::ShowNotifyInfo(TEXT("No actor selected"));
+		return;
+	}
+
+	if(NumberOfDuplicates <=0 || OffsetDist == 0)
+	{
+		DebugHeader::ShowNotifyInfo(TEXT("Did not specify a number of duplications or an offset distance"));
+		return;
+	}
+
+	for(AActor* SelectedActor:SelectedActors)
+	{	
+		if(!SelectedActor) continue;
+
+		for(int32 i = 0; i<NumberOfDuplicates; i++)
+		{
+			AActor* DuplicatedActor = 
+			EditorActorSubsystem->DuplicateActor(SelectedActor,SelectedActor->GetWorld());
+
+			if(!DuplicatedActor) continue;
+
+			const float DuplicationOffsetDist = (i+1)*OffsetDist;
+
+			switch(AxisForDuplication)
+			{
+			case E_DuplicationAxis::EDA_XAxis:
+
+			DuplicatedActor->AddActorWorldOffset(FVector(DuplicationOffsetDist,0.f,0.f));
+				break;
+
+			case E_DuplicationAxis::EDA_YAxis:
+
+			DuplicatedActor->AddActorWorldOffset(FVector(0.f,DuplicationOffsetDist,0.f));
+				break;
+
+			case E_DuplicationAxis::EDA_ZAxis:
+
+			DuplicatedActor->AddActorWorldOffset(FVector(0.f,0.f,DuplicationOffsetDist));
+				break;
+
+			case E_DuplicationAxis::EDA_MAX:
+				break;
+
+			default:
+				break;
+			}
+
+			EditorActorSubsystem->SetActorSelectionState(DuplicatedActor,true);
+			Counter++;
+		}		
+	}
+
+	if(Counter>0)
+	{
+		DebugHeader::ShowNotifyInfo(TEXT("Successfully duplicated ")+
+		FString::FromInt(Counter)+TEXT(" actors"));
+	}
+}
+
 bool UQuickActorActionsWidget::GetEditorActorSubsystem()
 {	
 	if(!EditorActorSubsystem)

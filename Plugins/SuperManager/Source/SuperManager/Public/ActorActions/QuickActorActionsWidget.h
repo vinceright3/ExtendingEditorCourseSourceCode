@@ -6,6 +6,14 @@
 #include "EditorUtilityWidget.h"
 #include "QuickActorActionsWidget.generated.h"
 
+UENUM(BlueprintType)
+enum class E_DuplicationAxis : uint8
+{
+	EDA_XAxis UMETA (DisplayName = "X Axis"),
+	EDA_YAxis UMETA (DisplayName = "Y Axis"),
+	EDA_ZAxis UMETA (DisplayName = "Z Axis"),
+	EDA_MAX UMETA (DisplayName = "Default Max")
+};
 /**
  * 
  */
@@ -20,6 +28,22 @@ public:
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "ActorBatchSelection")
 	TEnumAsByte<ESearchCase::Type> SearchCase = ESearchCase::IgnoreCase;
+	
+#pragma region ActorBatchDuplication
+
+	UFUNCTION(BlueprintCallable)
+	void DuplicateActors();
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "ActorBatchDuplication")
+	E_DuplicationAxis AxisForDuplication = E_DuplicationAxis::EDA_XAxis;
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "ActorBatchDuplication")
+	int32 NumberOfDuplicates = 5;
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "ActorBatchDuplication")
+	float OffsetDist = 300.f;
+
+#pragma endregion
 
 private:
 	UPROPERTY()
