@@ -9,6 +9,7 @@
 #include "AssetToolsModule.h"
 #include "SlateWidgets/AdvanceDeletionWidget.h"
 #include "CustomStyle/SuperManagerStyle.h"
+#include "LevelEditor.h"
 
 #define LOCTEXT_NAMESPACE "FSuperManagerModule"
 
@@ -19,6 +20,8 @@ void FSuperManagerModule::StartupModule()
 	InitCBMenuExtention();
 
 	RegisterAdvanceDeletionTab();
+
+	InitLevelEditorExtention();
 }
 
 #pragma region ContentBrowserMenuExtention
@@ -370,6 +373,69 @@ void FSuperManagerModule::SyncCBToClickedAssetForAssetList(const FString & Asset
 
 	UEditorAssetLibrary::SyncBrowserToObjects(AssetsPathToSync);
 }
+#pragma endregion
+
+#pragma region LevelEditorMenuExtension
+	
+void FSuperManagerModule::InitLevelEditorExtention()
+{	
+	FLevelEditorModule& LevelEditorModule =
+	FModuleManager::LoadModuleChecked<FLevelEditorModule>(TEXT("LevelEditor"));
+
+	TArray<FLevelEditorModule::FLevelViewportMenuExtender_SelectedActors>& LevelEditorMenuExtenders =
+	LevelEditorModule.GetAllLevelViewportContextMenuExtenders();
+
+	LevelEditorMenuExtenders.Add(FLevelEditorModule::FLevelViewportMenuExtender_SelectedActors::
+	CreateRaw(this,&FSuperManagerModule::CustomLevelEditorMenuExtender));
+}
+
+TSharedRef<FExtender> FSuperManagerModule::CustomLevelEditorMenuExtender(const TSharedRef<FUICommandList> UICommandList, 
+const TArray<AActor*> SelectedActors)
+{	
+	TSharedRef<FExtender> MenuExtender = MakeShareable(new FExtender());
+	
+	if(SelectedActors.Num()>0)
+	{
+		MenuExtender->AddMenuExtension(
+			FName("ActorOptions"),
+			EExtensionHook::Before,
+			UICommandList,
+			FMenuExtensionDelegate::CreateRaw(this,&FSuperManagerModule::AddLevelEditorMenuEntry)
+			);
+	}
+
+	return MenuExtender;
+}
+
+void FSuperManagerModule::AddLevelEditorMenuEntry(FMenuBuilder & MenuBuilder)
+{
+	MenuBuilder.AddMenuEntry
+	(
+		FText::FromString(TEXT("Lock Actor Selection")),
+		FText::FromString(TEXT("Prevent actor from being selected")),
+		FSlateIcon(),
+		FExecuteAction::CreateRaw(this,&FSuperManagerModule::OnLockActorSelectionButtonClicked)
+	);
+
+	MenuBuilder.AddMenuEntry
+	(
+		FText::FromString(TEXT("Unlock all actor Selection")),
+		FText::FromString(TEXT("Remove the selection constraint on all actor")),
+		FSlateIcon(),
+		FExecuteAction::CreateRaw(this,&FSuperManagerModule::OnUnlockActorSelectionButtonClicked)
+	);
+}
+
+void FSuperManagerModule::OnLockActorSelectionButtonClicked()
+{
+	DebugHeader::Print(TEXT("Locked"),FColor::Cyan);
+}
+
+void FSuperManagerModule::OnUnlockActorSelectionButtonClicked()
+{
+	DebugHeader::Print(TEXT("Unlocked"),FColor::Red);
+}
+
 #pragma endregion
 
 void FSuperManagerModule::ShutdownModule()

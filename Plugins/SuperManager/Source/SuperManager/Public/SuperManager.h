@@ -43,6 +43,19 @@ private:
 
 #pragma endregion
 
+#pragma region LevelEditorMenuExtension
+	
+	void InitLevelEditorExtention();
+
+	TSharedRef<FExtender> CustomLevelEditorMenuExtender(const TSharedRef<FUICommandList> UICommandList, const TArray<AActor*> SelectedActors);
+
+	void AddLevelEditorMenuEntry(class FMenuBuilder& MenuBuilder);
+	
+	void OnLockActorSelectionButtonClicked();
+	void OnUnlockActorSelectionButtonClicked();
+
+#pragma endregion
+
 public:
 
 #pragma region ProccessDataForAdvanceDeletionTab
