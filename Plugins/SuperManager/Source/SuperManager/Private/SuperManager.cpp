@@ -10,6 +10,7 @@
 #include "SlateWidgets/AdvanceDeletionWidget.h"
 #include "CustomStyle/SuperManagerStyle.h"
 #include "LevelEditor.h"
+#include "Engine/Selection.h"
 
 #define LOCTEXT_NAMESPACE "FSuperManagerModule"
 
@@ -22,6 +23,8 @@ void FSuperManagerModule::StartupModule()
 	RegisterAdvanceDeletionTab();
 
 	InitLevelEditorExtention();
+
+	InitCustomSelectionEvent();
 }
 
 #pragma region ContentBrowserMenuExtention
@@ -434,6 +437,25 @@ void FSuperManagerModule::OnLockActorSelectionButtonClicked()
 void FSuperManagerModule::OnUnlockActorSelectionButtonClicked()
 {
 	DebugHeader::Print(TEXT("Unlocked"),FColor::Red);
+}
+
+#pragma endregion
+
+#pragma region SelectionLock
+
+void FSuperManagerModule::InitCustomSelectionEvent()
+{
+	USelection* UserSelection = GEditor->GetSelectedActors();
+
+	UserSelection->SelectObjectEvent.AddRaw(this,&FSuperManagerModule::OnActorSelected);
+}
+
+void FSuperManagerModule::OnActorSelected(UObject * SelectedObject)
+{
+	if(AActor* SelectedActor = Cast<AActor>(SelectedObject))
+	{
+		DebugHeader::Print(SelectedActor->GetActorLabel(), FColor::Cyan);
+	}
 }
 
 #pragma endregion
