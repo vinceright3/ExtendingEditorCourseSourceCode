@@ -121,12 +121,14 @@ void UQuickActorActionsWidget::DuplicateActors()
 
 void UQuickActorActionsWidget::RandomizeActorTransform()
 {
-	const bool ConditionNotSet = 
+	const bool bConditionNotSet = 
 	!RandomActorRotation.bRandomizeRotYaw &&
 	!RandomActorRotation.bRandomizeRotPitch &&
-	!RandomActorRotation.bRandomizeRotRoll;
+	!RandomActorRotation.bRandomizeRotRoll &&
+	!bRandomizeScale &&
+	!bRandomizeOffset;
 
-	if(ConditionNotSet)
+	if(bConditionNotSet)
 	{
 		DebugHeader::ShowNotifyInfo(TEXT("No variation condition specified"));
 		return;
@@ -168,13 +170,19 @@ void UQuickActorActionsWidget::RandomizeActorTransform()
 			SelectedActor->AddActorWorldRotation(FRotator(0.f,0.f,RandomRotRollValue));
 		}
 
-		const bool bShouldIncreaseCounter =
-		RandomActorRotation.bRandomizeRotYaw||
-		RandomActorRotation.bRandomizeRotPitch||
-		RandomActorRotation.bRandomizeRotRoll;
+		if(bRandomizeScale)
+		{
+			SelectedActor->SetActorScale3D(FVector(FMath::RandRange(ScaleMin,ScaleMax)));
+		}
 
-		if(bShouldIncreaseCounter) Counter++;
-		
+		if(bRandomizeOffset)
+		{
+			const float RandomOffsetValue = FMath::RandRange(OffsetMin,OffsetMax);
+
+			SelectedActor->AddActorWorldOffset(FVector(RandomOffsetValue,RandomOffsetValue,0.f));
+		}
+
+		Counter++;
 	}
 
 	if(Counter>0)
