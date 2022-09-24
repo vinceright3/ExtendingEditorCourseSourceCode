@@ -602,6 +602,8 @@ void FSuperManagerModule::ShutdownModule()
 	FGlobalTabmanager::Get()->UnregisterNomadTabSpawner(FName("AdvanceDeletion"));
 
 	FSuperManagerStyle::ShutDown();
+
+	FSuperManagerUICommands::Unregister();
 }
 
 #undef LOCTEXT_NAMESPACE
