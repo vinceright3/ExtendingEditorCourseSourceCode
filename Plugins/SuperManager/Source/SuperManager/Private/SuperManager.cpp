@@ -417,15 +417,15 @@ void FSuperManagerModule::AddLevelEditorMenuEntry(FMenuBuilder & MenuBuilder)
 	(
 		FText::FromString(TEXT("Lock Actor Selection")),
 		FText::FromString(TEXT("Prevent actor from being selected")),
-		FSlateIcon(),
+		FSlateIcon(FSuperManagerStyle::GetStyleSetName(),"LevelEditor.LockSelection"),
 		FExecuteAction::CreateRaw(this,&FSuperManagerModule::OnLockActorSelectionButtonClicked)
 	);
 
 	MenuBuilder.AddMenuEntry
 	(
-		FText::FromString(TEXT("Unlock all actor Selection")),
+		FText::FromString(TEXT("Unlock All Actor Selection")),
 		FText::FromString(TEXT("Remove the selection constraint on all actor")),
-		FSlateIcon(),
+		FSlateIcon(FSuperManagerStyle::GetStyleSetName(),"LevelEditor.UnlockSelection"),
 		FExecuteAction::CreateRaw(this,&FSuperManagerModule::OnUnlockActorSelectionButtonClicked)
 	);
 }
