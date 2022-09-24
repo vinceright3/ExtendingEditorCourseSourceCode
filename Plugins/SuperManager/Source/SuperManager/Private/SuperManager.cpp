@@ -12,6 +12,7 @@
 #include "LevelEditor.h"
 #include "Engine/Selection.h"
 #include "Subsystems/EditorActorSubsystem.h"
+#include "CustomUICommands/SuperManagerUICommands.h"
 
 #define LOCTEXT_NAMESPACE "FSuperManagerModule"
 
@@ -22,6 +23,8 @@ void FSuperManagerModule::StartupModule()
 	InitCBMenuExtention();
 
 	RegisterAdvanceDeletionTab();
+
+	FSuperManagerUICommands::Register();
 
 	InitLevelEditorExtention();
 
