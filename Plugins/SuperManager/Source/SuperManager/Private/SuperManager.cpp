@@ -25,6 +25,8 @@ void FSuperManagerModule::StartupModule()
 	RegisterAdvanceDeletionTab();
 
 	FSuperManagerUICommands::Register();
+	
+	InitCustomUICommands();
 
 	InitLevelEditorExtention();
 
@@ -389,6 +391,9 @@ void FSuperManagerModule::InitLevelEditorExtention()
 	FLevelEditorModule& LevelEditorModule =
 	FModuleManager::LoadModuleChecked<FLevelEditorModule>(TEXT("LevelEditor"));
 
+	TSharedRef<FUICommandList> ExistingLevelCommands = LevelEditorModule.GetGlobalLevelEditorActions();
+	ExistingLevelCommands->Append(CustomUICommands.ToSharedRef());
+
 	TArray<FLevelEditorModule::FLevelViewportMenuExtender_SelectedActors>& LevelEditorMenuExtenders =
 	LevelEditorModule.GetAllLevelViewportContextMenuExtenders();
 
@@ -547,6 +552,35 @@ bool FSuperManagerModule::CheckIsActorSelectionLocked(AActor * ActorToProcess)
 	if(!ActorToProcess) return false;
 
 	return ActorToProcess->ActorHasTag(FName("Locked"));
+}
+
+#pragma endregion
+
+#pragma region CustomEditorUICommands
+
+void FSuperManagerModule::InitCustomUICommands()
+{
+	CustomUICommands = MakeShareable(new FUICommandList());
+
+	CustomUICommands->MapAction(
+		FSuperManagerUICommands::Get().LockActorSelection,
+		FExecuteAction::CreateRaw(this,&FSuperManagerModule::OnSelectionLockHotKeyPressed)
+	);
+
+	CustomUICommands->MapAction(
+		FSuperManagerUICommands::Get().UnlockActorSelection,
+		FExecuteAction::CreateRaw(this,&FSuperManagerModule::OnUnlockActorSelectionHotKeyPressed)
+	);
+}
+
+void FSuperManagerModule::OnSelectionLockHotKeyPressed()
+{
+	OnLockActorSelectionButtonClicked();
+}
+
+void FSuperManagerModule::OnUnlockActorSelectionHotKeyPressed()
+{
+	OnUnlockActorSelectionButtonClicked();
 }
 
 #pragma endregion
