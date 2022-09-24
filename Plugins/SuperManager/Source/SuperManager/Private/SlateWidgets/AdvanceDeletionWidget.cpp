@@ -391,7 +391,7 @@ FReply SAdvanceDeletionTab::OnDeleteAllButtonClicked()
 	{
 		AssetDataToDelete.Add(*Data.Get());
 	}
-
+	 
 	 FSuperManagerModule& SuperManagerModule = 
 	 FModuleManager::LoadModuleChecked<FSuperManagerModule>(TEXT("SuperManager"));
 
