@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright Vince Petrelli. Published in 2022.All rights reserved.
 
 
 #include "AssetActions/QuickMaterialCreationWidget.h"

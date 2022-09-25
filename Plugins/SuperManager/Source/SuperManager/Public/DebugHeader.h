@@ -1,3 +1,4 @@
+// Copyright Vince Petrelli. Published in 2022.All rights reserved.
 #pragma once
 
 #include "Misc/MessageDialog.h"

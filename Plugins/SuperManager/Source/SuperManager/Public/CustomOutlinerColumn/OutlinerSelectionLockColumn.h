@@ -1,4 +1,4 @@
-// Vince Petrelli All Rights Reserverd
+// Copyright Vince Petrelli. Published in 2022.All rights reserved.
 
 #pragma once
 

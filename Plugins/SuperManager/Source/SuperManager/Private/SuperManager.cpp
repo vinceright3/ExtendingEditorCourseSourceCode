@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+// Copyright Vince Petrelli. Published in 2022.All rights reserved.
 
 #include "SuperManager.h"
 #include "ContentBrowserModule.h"
