@@ -25,7 +25,13 @@ SHeaderRow::FColumn::FArguments FOutlinerSelectionLockColumn::ConstructHeaderRow
 
 const TSharedRef<SWidget> FOutlinerSelectionLockColumn::ConstructRowWidget(FSceneOutlinerTreeItemRef TreeItem, 
 const STableRow<FSceneOutlinerTreeItemPtr>& Row)
-{
-	return SNullWidget::NullWidget;
+{	
+	TSharedRef<SCheckBox> ConstructedRowWidgetCheckBox =
+	SNew(SCheckBox)
+	.Visibility(EVisibility::Visible)
+	.HAlign(HAlign_Center)
+	.IsChecked(ECheckBoxState::Unchecked);
+
+	return ConstructedRowWidgetCheckBox;
 }
 

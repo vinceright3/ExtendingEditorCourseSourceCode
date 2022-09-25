@@ -601,7 +601,7 @@ void FSuperManagerModule::InitSceneOutlinerColumnExtension()
 		1,
 		FCreateSceneOutlinerColumn::CreateRaw(this,&FSuperManagerModule::OnCreateSelectionLockColumn)
 	);
-
+	
 	SceneOutlinerModule.RegisterDefaultColumnType<FOutlinerSelectionLockColumn>(SelectionLockColumnInfo);
 }
 
