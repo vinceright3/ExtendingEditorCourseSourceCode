@@ -64,8 +64,7 @@ private:
 
 	void LockActorSelection(AActor* ActorToProcess);
 	void UnlockActorSelection(AActor* ActorToProcess);
-	bool CheckIsActorSelectionLocked(AActor* ActorToProcess);
-
+	
 #pragma endregion
 
 #pragma region CustomEditorUICommands
@@ -102,4 +101,8 @@ public:
 	void SyncCBToClickedAssetForAssetList(const FString& AssetPathToSync);
 
 #pragma endregion
+
+	bool CheckIsActorSelectionLocked(AActor* ActorToProcess);
+	void ProcessLockingForOutliner(AActor* ActorToProcess,bool bShouldLock);
+
 };
