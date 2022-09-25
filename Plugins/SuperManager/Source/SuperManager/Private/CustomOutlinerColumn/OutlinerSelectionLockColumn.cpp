@@ -38,9 +38,14 @@ const STableRow<FSceneOutlinerTreeItemPtr>& Row)
 	const bool bIsActorSelectionLocked = 
 	SuperManagerModule.CheckIsActorSelectionLocked(ActorTreeItem->Actor.Get());
 
+	const FCheckBoxStyle& ToggleButtonStyle = FSuperManagerStyle::GetCreatedSlateStyleSet()->
+	GetWidgetStyle<FCheckBoxStyle>(FName("SceneOutliner.SelectionLock"));
+
 	TSharedRef<SCheckBox> ConstructedRowWidgetCheckBox =
 	SNew(SCheckBox)
 	.Visibility(EVisibility::Visible)
+	.Type(ESlateCheckBoxType::ToggleButton)
+	.Style(&ToggleButtonStyle)
 	.HAlign(HAlign_Center)
 	.IsChecked(bIsActorSelectionLocked?  ECheckBoxState::Checked : ECheckBoxState::Unchecked)
 	.OnCheckStateChanged(this,&FOutlinerSelectionLockColumn::OnRowWdigetCheckStateChanged,ActorTreeItem->Actor);
