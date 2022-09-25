@@ -64,6 +64,8 @@ private:
 
 	void LockActorSelection(AActor* ActorToProcess);
 	void UnlockActorSelection(AActor* ActorToProcess);
+
+	void RefreshSceneOutliner();
 	
 #pragma endregion
 
