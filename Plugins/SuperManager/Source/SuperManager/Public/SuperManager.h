@@ -79,6 +79,14 @@ private:
 
 #pragma endregion
 
+#pragma region SceneOutlinerExtension
+
+	void InitSceneOutlinerColumnExtension();
+
+	TSharedRef<class ISceneOutlinerColumn> OnCreateSelectionLockColumn(class ISceneOutliner& SceneOutliner);
+
+#pragma endregion
+
 	TWeakObjectPtr<class UEditorActorSubsystem> WeakEditorActorSubsystem;
 
 	bool GetEditorActorSubsystem();

@@ -13,6 +13,8 @@
 #include "Engine/Selection.h"
 #include "Subsystems/EditorActorSubsystem.h"
 #include "CustomUICommands/SuperManagerUICommands.h"
+#include "SceneOutlinerModule.h"
+#include "CustomOutlinerColumn/OutlinerSelectionLockColumn.h"
 
 #define LOCTEXT_NAMESPACE "FSuperManagerModule"
 
@@ -31,6 +33,8 @@ void FSuperManagerModule::StartupModule()
 	InitLevelEditorExtention();
 
 	InitCustomSelectionEvent();
+
+	InitSceneOutlinerColumnExtension();
 }
 
 #pragma region ContentBrowserMenuExtention
@@ -581,6 +585,29 @@ void FSuperManagerModule::OnSelectionLockHotKeyPressed()
 void FSuperManagerModule::OnUnlockActorSelectionHotKeyPressed()
 {
 	OnUnlockActorSelectionButtonClicked();
+}
+
+#pragma endregion
+
+#pragma region SceneOutlinerExtension
+
+void FSuperManagerModule::InitSceneOutlinerColumnExtension()
+{	
+	FSceneOutlinerModule& SceneOutlinerModule =
+	FModuleManager::LoadModuleChecked<FSceneOutlinerModule>(TEXT("SceneOutliner"));
+
+	FSceneOutlinerColumnInfo SelectionLockColumnInfo(
+		ESceneOutlinerColumnVisibility::Visible,
+		1,
+		FCreateSceneOutlinerColumn::CreateRaw(this,&FSuperManagerModule::OnCreateSelectionLockColumn)
+	);
+
+	SceneOutlinerModule.RegisterDefaultColumnType<FOutlinerSelectionLockColumn>(SelectionLockColumnInfo);
+}
+
+TSharedRef<ISceneOutlinerColumn> FSuperManagerModule::OnCreateSelectionLockColumn(ISceneOutliner & SceneOutliner)
+{
+	 return MakeShareable(new FOutlinerSelectionLockColumn(SceneOutliner));
 }
 
 #pragma endregion
