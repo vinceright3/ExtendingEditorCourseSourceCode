@@ -1,7 +1,7 @@
 // Vince Petrelli All Rights Reserverd
 
 
-#include "CustomOutlinerColumn/OutlinerSelectionColumn.h"
+#include "CustomOutlinerColumn/OutlinerSelectionLockColumn.h"
 
 SHeaderRow::FColumn::FArguments FOutlinerSelectionLockColumn::ConstructHeaderRowColumn()
 {
