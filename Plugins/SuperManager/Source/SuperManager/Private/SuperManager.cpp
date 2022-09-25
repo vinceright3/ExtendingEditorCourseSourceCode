@@ -628,6 +628,14 @@ TSharedRef<ISceneOutlinerColumn> FSuperManagerModule::OnCreateSelectionLockColum
 	 return MakeShareable(new FOutlinerSelectionLockColumn(SceneOutliner));
 }
 
+void FSuperManagerModule::UnRegisterSceneOutlinerColumnExtension()
+{
+	FSceneOutlinerModule& SceneOutlinerModule =
+	FModuleManager::LoadModuleChecked<FSceneOutlinerModule>(TEXT("SceneOutliner"));
+
+	SceneOutlinerModule.UnRegisterColumnType<FOutlinerSelectionLockColumn>();
+}
+
 #pragma endregion
 
 void FSuperManagerModule::ProcessLockingForOutliner(AActor * ActorToProcess, bool bShouldLock)
@@ -669,6 +677,8 @@ void FSuperManagerModule::ShutdownModule()
 	FSuperManagerStyle::ShutDown();
 
 	FSuperManagerUICommands::Unregister();
+
+	UnRegisterSceneOutlinerColumnExtension();
 }
 
 #undef LOCTEXT_NAMESPACE
