@@ -13,3 +13,5 @@ StarterContent
 *.suo
 *.xcodeproj
 *.xcworkspace
+.vsconfig
+.idea
